@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AXIS">
+<meta name="theme-color" content="#161E26">
+<title>AXIS</title>
+<style>
+  :root{
+    --bg:#232E37; --ribbon:#161E26; --tint:#1B242C; --card:#36424C; --card2:#2C3A44;
+    --cream:#E7DCC8; --slate:#8A99A6; --slate2:#C2CDD4; --dim:#5F6B75;
+    --gold:#C9962F; --gold2:#D7B66A; --burg:#7A1F2D; --line:#2a3640;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; background:var(--bg); color:var(--cream);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  body{min-height:100vh; padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  .hidden{display:none !important;}
+
+  .ribbon{background:var(--ribbon); padding:12px 18px; display:flex; align-items:center; gap:10px;
+    position:sticky; top:0; z-index:10;}
+  .ribbon .title{font-size:19px; font-weight:600; letter-spacing:2px;}
+  .ribbon .brand{margin-left:auto; color:var(--gold); font-size:13px; letter-spacing:2px; font-weight:600;}
+  .back{color:var(--gold); font-size:15px; display:flex; align-items:center; gap:6px; background:none; border:none; padding:0;}
+  .back .lbl{color:var(--slate); font-size:13px; letter-spacing:1px;}
+
+  .wrap{max-width:520px; margin:0 auto;}
+  .pad{padding:14px 16px 40px;}
+
+  .search{margin:10px 16px 6px; display:flex; align-items:center; gap:8px; background:var(--bg);
+    border:1px solid var(--card); border-radius:9px; padding:9px 12px;}
+  .search input{flex:1; background:none; border:none; outline:none; color:var(--cream); font-size:15px;}
+  .search input::placeholder{color:var(--dim);}
+
+  .row{display:flex; align-items:center; justify-content:space-between; padding:13px 18px; border-bottom:1px solid var(--line);}
+  .row .nm{color:var(--cream); font-size:15px;}
+  .row .sub{color:var(--slate); font-size:12px; margin-top:2px;}
+  .chev{color:var(--dim); font-size:20px;}
+
+  .caption{text-align:center; padding:6px 0 2px;}
+  .caption .p{color:var(--cream); font-size:17px; font-weight:600; line-height:1.35;}
+  .caption .v{color:var(--slate); font-size:13px; font-style:italic; line-height:1.35;}
+  .caseno{color:var(--slate); font-size:12px; margin-top:7px;}
+  .pill{display:inline-block; margin-top:9px; font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px;}
+  .pill.active{background:#2f2a1c; border:1px solid var(--gold); color:var(--gold2);}
+  .pill.other{background:var(--tint); border:1px solid var(--card); color:var(--slate);}
+
+  .section{margin:18px 0 8px; color:var(--slate); font-size:11px; letter-spacing:1px; text-transform:uppercase;}
+  .courtrow{display:flex; align-items:center; gap:9px; color:var(--slate2); font-size:14px; padding:5px 0;}
+  .courtrow .ico{color:var(--slate); width:18px; text-align:center;}
+
+  .hcard{display:flex; align-items:center; gap:12px; background:var(--card2); border:1px solid #3A4954;
+    border-radius:10px; padding:10px 12px; margin-bottom:8px;}
+  .hchip{flex:0 0 auto; width:48px; text-align:center; background:var(--tint); border-radius:8px; padding:6px 0;}
+  .hchip .mo{color:var(--gold); font-size:10px; letter-spacing:1px; font-weight:600;}
+  .hchip .dy{color:var(--cream); font-size:19px; font-weight:600; line-height:1.05;}
+  .hcard .ht{color:var(--cream); font-size:13px;}
+  .hcard .hm{color:var(--slate); font-size:11px; margin-top:3px;}
+
+  .navrow{margin-top:16px; display:flex; align-items:center; justify-content:space-between;
+    background:var(--card); border-radius:9px; padding:12px 14px;}
+  .navrow .lbl{color:var(--cream); font-size:14px; display:flex; align-items:center; gap:8px;}
+  .navrow .ico{color:var(--gold);}
+
+  .tabs{display:flex; gap:3px; background:var(--ribbon); border:1px solid rgba(255,255,255,.07);
+    border-radius:10px; padding:3px; margin-bottom:16px;}
+  .tab{flex:1; text-align:center; padding:8px 4px; border-radius:8px; border:none; background:none;
+    color:var(--slate); font-size:11px; letter-spacing:.5px; font-weight:600;}
+  .tab.on{background:#33414C; color:var(--gold2);}
+  .tab .n{color:var(--dim);}
+  .tab.on .n{color:var(--slate);}
+
+  .cc{background:var(--card); border-radius:10px; padding:12px; margin-bottom:8px;}
+  .cc .top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .cc .name{color:var(--cream); font-size:15px;}
+  .cc .role{background:var(--tint); color:var(--slate); font-size:10px; padding:2px 8px; border-radius:12px; white-space:nowrap;}
+  .cc .lines{margin-top:9px; display:flex; flex-direction:column; gap:9px;}
+  .lk{display:flex; align-items:center; justify-content:space-between;}
+  .lk .val{color:var(--slate2); font-size:13px; display:flex; align-items:center; gap:8px;}
+  .lk .val .ico{color:var(--gold); width:16px; text-align:center;}
+  .lk .act{color:var(--gold); font-size:18px; padding:4px; margin:-4px;}
+  .atty{background:var(--card2); border-radius:10px; padding:11px 12px; margin:0 0 12px 14px;}
+  .atty .aname{color:var(--cream); font-size:14px;}
+  .atty .afirm{color:var(--slate); font-size:11px; margin-top:1px;}
+  .atty .arole{color:var(--slate); font-size:10px; letter-spacing:.5px; text-transform:uppercase;}
+  .foot{margin-top:14px; color:var(--dim); font-size:11px; line-height:1.5; text-align:center;}
+  .empty{color:var(--slate); font-size:13px; text-align:center; padding:24px 10px;}
+
+  /* Centered full-screen states: auth, lock, loading */
+  .screen-center{min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 28px; gap:18px;}
+  .logo{width:64px; height:64px; border-radius:18px; background:var(--ribbon); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:30px; font-weight:600; letter-spacing:1px;}
+  .h1{font-size:20px; font-weight:600; color:var(--cream);}
+  .muted{color:var(--slate); font-size:14px; line-height:1.5; max-width:320px;}
+  .btn{background:linear-gradient(180deg,#3A4954,#2C3A44); border:1px solid var(--gold); color:var(--gold2);
+    font-size:15px; font-weight:600; padding:13px 22px; border-radius:12px; min-width:220px;}
+  .btn.plain{border-color:var(--card); color:var(--slate2);}
+  .pinbox{display:flex; gap:10px; margin:6px 0;}
+  .pindot{width:14px; height:14px; border-radius:50%; border:1.5px solid var(--slate);}
+  .pindot.f{background:var(--gold); border-color:var(--gold);}
+  .keys{display:grid; grid-template-columns:repeat(3,72px); gap:14px; margin-top:8px;}
+  .key{height:72px; border-radius:50%; background:var(--card); border:1px solid rgba(255,255,255,.06);
+    color:var(--cream); font-size:26px; font-weight:500;}
+  .key.blank{background:none; border:none;}
+  .err{color:#E29A9A; font-size:13px; min-height:18px;}
+  .spin{width:34px; height:34px; border:3px solid var(--card); border-top-color:var(--gold); border-radius:50%; animation:sp 1s linear infinite;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+  .asof{color:var(--dim); font-size:11px; text-align:center; padding:10px 16px 2px;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading" class="screen-center">
+  <div class="spin"></div>
+  <div class="muted" id="loadingMsg">Loading…</div>
+</div>
+
+<!-- AUTH -->
+<div id="auth" class="screen-center hidden">
+  <div class="logo">a</div>
+  <div class="h1">AXIS</div>
+  <div class="muted">Read-only case view. Sign in with Dropbox once to load your cases on this phone.</div>
+  <button class="btn" id="signinBtn">Sign in with Dropbox</button>
+  <div class="err" id="authErr"></div>
+</div>
+
+<!-- LOCK -->
+<div id="lock" class="screen-center hidden">
+  <div class="logo">a</div>
+  <div class="h1" id="lockTitle">Locked</div>
+  <div class="pinbox" id="pinDots"></div>
+  <div class="err" id="lockErr"></div>
+  <div class="keys" id="keys"></div>
+  <button class="btn plain" id="faceBtn" style="min-width:auto; padding:10px 18px;">Use Face ID</button>
+</div>
+
+<!-- SETUP LOCK (first run) -->
+<div id="setupLock" class="screen-center hidden">
+  <div class="logo">a</div>
+  <div class="h1">Protect this app</div>
+  <div class="muted">Add a lock so case data only opens for you. You can use Face ID, with a 4-digit PIN as backup.</div>
+  <button class="btn" id="enableFaceBtn">Enable Face ID</button>
+  <button class="btn plain" id="setPinBtn">Set a PIN instead</button>
+  <button class="btn plain" id="skipLockBtn" style="border:none;">Skip for now</button>
+  <div class="err" id="setupErr"></div>
+</div>
+
+<!-- CASE LIST -->
+<div id="list" class="screen-center-none hidden">
+  <div class="ribbon"><span class="title">CASES</span><span class="brand">AXIS</span></div>
+  <div class="wrap">
+    <div class="search"><span style="color:var(--slate);">&#9906;</span>
+      <input id="searchInput" type="search" placeholder="Search cases" autocapitalize="none" autocorrect="off">
+    </div>
+    <div class="asof" id="asof"></div>
+    <div id="listRows"></div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="overview" class="hidden">
+  <div class="ribbon"><button class="back" onclick="showList()">&#8249; <span class="lbl">CASES</span></button></div>
+  <div class="wrap pad" id="overviewBody"></div>
+</div>
+
+<!-- CONTACTS -->
+<div id="contacts" class="hidden">
+  <div class="ribbon"><button class="back" id="contactsBack">&#8249; <span class="lbl" id="contactsBackLbl">Case</span></button></div>
+  <div class="wrap pad" id="contactsBody"></div>
+</div>
+
+<script>
+"use strict";
+/* ---------------- CONFIG ---------------- */
+var APP_KEY = "ill23z8466yb06z";
+var REDIRECT_URI = "https://loeclaw.github.io";
+var CASES_PATH = "/LOEC FILES/00_Claude/CASE MANAGER/Data/cases";   // Full-Dropbox path to the case files
+var LS = {
+  refresh: "axis_refresh", verifier: "axis_pkce_verifier",
+  cases: "axis_cases", asof: "axis_asof",
+  lockKind: "axis_lock_kind", pinHash: "axis_pin_hash", cred: "axis_cred_id"
+};
+
+/* ---------------- small helpers ---------------- */
+function $(id){ return document.getElementById(id); }
+function show(id){ ["loading","auth","lock","setupLock","list","overview","contacts"].forEach(function(s){ $(s).classList.add("hidden"); }); $(id).classList.remove("hidden"); window.scrollTo(0,0); }
+function b64url(bytes){ var s=btoa(String.fromCharCode.apply(null,new Uint8Array(bytes))); return s.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+async function sha256(str){ var d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(str)); return d; }
+function randStr(n){ var a=new Uint8Array(n); crypto.getRandomValues(a); return b64url(a).slice(0,n); }
+function esc(s){ return (s==null?"":String(s)).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+/* ---------------- OAuth (PKCE) ---------------- */
+async function startSignIn(){
+  var verifier = randStr(64);
+  localStorage.setItem(LS.verifier, verifier);
+  var challenge = b64url(await sha256(verifier));
+  var url = "https://www.dropbox.com/oauth2/authorize"
+    + "?client_id=" + encodeURIComponent(APP_KEY)
+    + "&response_type=code"
+    + "&redirect_uri=" + encodeURIComponent(REDIRECT_URI)
+    + "&code_challenge=" + challenge
+    + "&code_challenge_method=S256"
+    + "&token_access_type=offline"
+    + "&scope=" + encodeURIComponent("files.metadata.read files.content.read");
+  window.location.href = url;
+}
+async function exchangeCode(code){
+  var verifier = localStorage.getItem(LS.verifier) || "";
+  var body = new URLSearchParams({
+    code: code, grant_type: "authorization_code", client_id: APP_KEY,
+    redirect_uri: REDIRECT_URI, code_verifier: verifier
+  });
+  var r = await fetch("https://api.dropboxapi.com/oauth2/token", {method:"POST", body:body});
+  if(!r.ok) throw new Error("token exchange failed");
+  var j = await r.json();
+  if(j.refresh_token) localStorage.setItem(LS.refresh, j.refresh_token);
+  localStorage.removeItem(LS.verifier);
+  return j.access_token;
+}
+var _access=null, _accessExp=0;
+async function getAccessToken(){
+  var now=Date.now();
+  if(_access && now < _accessExp-60000) return _access;
+  var refresh=localStorage.getItem(LS.refresh);
+  if(!refresh) throw new Error("no refresh token");
+  var body=new URLSearchParams({grant_type:"refresh_token", refresh_token:refresh, client_id:APP_KEY});
+  var r=await fetch("https://api.dropboxapi.com/oauth2/token",{method:"POST", body:body});
+  if(!r.ok) throw new Error("refresh failed");
+  var j=await r.json();
+  _access=j.access_token; _accessExp=now + (j.expires_in||14400)*1000;
+  return _access;
+}
+
+/* ---------------- Dropbox reads ---------------- */
+async function dbxList(path){
+  var token=await getAccessToken(); var out=[];
+  var r=await fetch("https://api.dropboxapi.com/2/files/list_folder",{
+    method:"POST", headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+    body:JSON.stringify({path:path})
+  });
+  if(!r.ok) throw new Error("list "+r.status);
+  var j=await r.json(); out=out.concat(j.entries);
+  while(j.has_more){
+    r=await fetch("https://api.dropboxapi.com/2/files/list_folder/continue",{
+      method:"POST", headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({cursor:j.cursor})});
+    if(!r.ok) throw new Error("list_continue "+r.status);
+    j=await r.json(); out=out.concat(j.entries);
+  }
+  return out;
+}
+async function dbxDownload(path){
+  var token=await getAccessToken();
+  var r=await fetch("https://content.dropboxapi.com/2/files/download",{
+    method:"POST", headers:{Authorization:"Bearer "+token,"Dropbox-API-Arg":JSON.stringify({path:path})}});
+  if(!r.ok) throw new Error("download "+r.status);
+  return await r.text();
+}
+async function loadAllCases(){
+  var entries=await dbxList(CASES_PATH);
+  var files=entries.filter(function(e){ return e[".tag"]==="file" && /\.json$/i.test(e.name); });
+  var cases=[];
+  for(var i=0;i<files.length;i++){
+    try{ var txt=await dbxDownload(files[i].path_lower); cases.push(JSON.parse(txt)); }catch(e){}
+  }
+  cases.sort(function(a,b){ return caseName(a).localeCompare(caseName(b)); });
+  localStorage.setItem(LS.cases, JSON.stringify(cases));
+  var stamp=new Date().toISOString(); localStorage.setItem(LS.asof, stamp);
+  return cases;
+}
+
+/* ---------------- data shaping ---------------- */
+var CASES=[];
+function firstWord(s){ return (s||"").trim().split(/\s+/)[0]||""; }
+function lastWord(s){ var p=(s||"").trim().split(/\s+/); return p[p.length-1]||""; }
+function caseName(c){
+  if(c.nameOverride) return c.nameOverride;
+  var p=c.parties&&c.parties.pet; if(!p) return c.id||"Case";
+  return lastWord(p.fullName)+", "+firstWord(p.fullName);
+}
+function captionParts(c){
+  if(c.captionOverride){ var m=c.captionOverride.split(/\s+v\.?\s+/i); if(m.length===2) return [m[0],m[1]]; }
+  var pet=c.parties&&c.parties.pet, resp=c.parties&&c.parties.resp;
+  return [ pet?lastWord(pet.fullName):"", resp?lastWord(resp.fullName):"" ];
+}
+function courtLine(c){
+  var ct=c.court||{}; var a=[ct.branch]; if(ct.department) a.push("Dept. "+ct.department);
+  return a.filter(Boolean).join(" · ");
+}
+function judgeLine(c){ var ct=c.court||{}; return [ct.judgeTitle,ct.judgeName].filter(Boolean).join(" "); }
+var MONTHS=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function parseDate(s){ if(!s) return null; var p=s.split("-"); if(p.length!==3) return null; return {y:+p[0],m:+p[1],d:+p[2]}; }
+function hearings(c){
+  return (c.tasks||[]).filter(function(t){ return t.category==="court_date" && !t.completed && t.date; })
+    .sort(function(a,b){ return (a.date||"").localeCompare(b.date||""); });
+}
+
+/* ---------------- search (only what's shown) ---------------- */
+function caseHaystack(c){
+  var bits=[caseName(c), c.caseNumber, c.captionOverride, c.nameOverride];
+  var ct=c.court||{}; bits.push(ct.branch,ct.judgeName,ct.department);
+  ["pet","resp"].forEach(function(k){ var p=c.parties&&c.parties[k]; if(p){ bits.push(p.fullName,p.otherRole,p.phone,p.email,p.cityStateZip); } });
+  (c.attorneys||[]).forEach(function(a){ bits.push(a.fullName,a.firmName,a.phone,a.email); });
+  (c.collaterals||[]).forEach(function(a){ bits.push(a.fullName,a.otherRole,a.phone,a.email); });
+  (c.children||[]).forEach(function(a){ bits.push(a.fullName); });
+  (c.clients||[]).forEach(function(a){ bits.push(a.fullName,a.phone,a.email); });
+  return bits.filter(Boolean).join(" • ").toLowerCase();
+}
+
+/* ---------------- render: list ---------------- */
+function renderList(filter){
+  var q=(filter||"").trim().toLowerCase();
+  var rows=CASES.filter(function(c){ return !q || caseHaystack(c).indexOf(q)>=0; });
+  var html=rows.map(function(c){
+    var idx=CASES.indexOf(c);
+    var sub=[c.caseNumber, (c.court&&c.court.branch)].filter(Boolean).join(" · ");
+    return '<div class="row" onclick="openCase('+idx+')"><div><div class="nm">'+esc(caseName(c))+
+      '</div><div class="sub">'+esc(sub)+'</div></div><span class="chev">&#8250;</span></div>';
+  }).join("");
+  $("listRows").innerHTML = html || '<div class="empty">No matching cases.</div>';
+  var stamp=localStorage.getItem(LS.asof);
+  $("asof").textContent = stamp ? ("Updated "+new Date(stamp).toLocaleString()) : "";
+}
+
+/* ---------------- render: overview ---------------- */
+function openCase(idx){
+  var c=CASES[idx]; if(!c) return;
+  var cp=captionParts(c);
+  var st=(c.status||"Active");
+  var stCls = st==="Active" ? "active" : "other";
+  var hs=hearings(c);
+  var hHtml = hs.length ? hs.map(function(t){
+    var d=parseDate(t.date); var mo=d?MONTHS[d.m-1]:""; var dy=d?d.d:"";
+    var meta=[t.time, t.department?("Dept. "+t.department):"", d?d.y:""].filter(Boolean).join(" · ");
+    return '<div class="hcard"><div class="hchip"><div class="mo">'+esc(mo)+'</div><div class="dy">'+esc(dy)+
+      '</div></div><div><div class="ht">'+esc(t.title||"Hearing")+'</div><div class="hm">'+esc(meta)+'</div></div></div>';
+  }).join("") : '<div class="empty" style="padding:10px;">No upcoming hearings.</div>';
+
+  $("overviewBody").innerHTML =
+    '<div class="caption"><div class="p">'+esc(cp[0])+'</div><div class="v">v.</div><div class="p">'+esc(cp[1])+'</div>'+
+      '<div class="caseno">Case no. '+esc(c.caseNumber||"—")+'</div>'+
+      '<div><span class="pill '+stCls+'">'+esc(st)+'</span></div></div>'+
+    '<div style="border-top:1px solid var(--line); margin-top:16px; padding-top:12px;">'+
+      '<div class="courtrow"><span class="ico">&#127963;</span>'+esc(courtLine(c)||"—")+'</div>'+
+      (judgeLine(c)?'<div class="courtrow"><span class="ico">&#9878;</span>'+esc(judgeLine(c))+'</div>':'')+
+    '</div>'+
+    '<div class="section">Hearings</div>'+hHtml+
+    '<div class="navrow" onclick="openContacts('+CASES.indexOf(c)+')"><span class="lbl"><span class="ico">&#128100;</span> Contacts</span><span class="chev">&#8250;</span></div>';
+  show("overview");
+}
+
+/* ---------------- render: contacts ---------------- */
+var _contactCase=null, _contactTab="parties";
+function openContacts(idx){ _contactCase=CASES[idx]; _contactTab="parties"; renderContacts(); show("contacts"); }
+function contactLines(obj, opts){
+  opts=opts||{}; var out="";
+  if(obj.phone){ (""+obj.phone).split(/;\s*/).forEach(function(ph){ ph=ph.trim(); if(!ph) return;
+    var num=ph.replace(/[^0-9+]/g,"");
+    out+='<div class="lk"><span class="val"><span class="ico">&#128222;</span>'+esc(ph)+'</span>'+
+      '<a class="act" href="tel:'+esc(num)+'">&#128222;</a></div>'; }); }
+  if(obj.email){ out+='<div class="lk"><span class="val"><span class="ico">&#9993;</span>'+esc(obj.email)+'</span>'+
+      '<a class="act" href="mailto:'+esc(obj.email)+'">&#9993;</a></div>'; }
+  return out;
+}
+function attyCard(a, roleLbl){
+  if(!a) return "";
+  return '<div class="atty"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">'+
+    '<div class="aname">'+esc(a.fullName)+'</div><span class="arole">Atty · '+esc(roleLbl)+'</span></div>'+
+    (a.firmName?'<div class="afirm">'+esc(a.firmName)+'</div>':'')+
+    '<div class="cc lines" style="background:none;padding:0;margin-top:8px;">'+contactLines(a)+'</div></div>';
+}
+function partyRole(p){ return (p&&p.otherRole) ? p.otherRole : ""; }
+function renderContacts(){
+  var c=_contactCase; if(!c) return;
+  $("contactsBackLbl").textContent = caseName(c).split(",")[0];
+  var isMC = c.type==="MC";
+  var atts=c.attorneys||[];
+  var partyCount = 2 + atts.length;
+  var clientCount = (c.clients||[]).length;
+  var collCount = (c.collaterals||[]).length;
+  var tabs='<div class="tabs">'+
+    tabBtn("parties","PARTIES",partyCount)+
+    (isMC?tabBtn("client","CLIENT",clientCount):"")+
+    tabBtn("collaterals","COLL",collCount)+'</div>';
+
+  var body="";
+  if(_contactTab==="parties"){
+    var pet=c.parties&&c.parties.pet, resp=c.parties&&c.parties.resp;
+    var petAtty=atts.filter(function(a){return a.forParty==="pet";})[0];
+    var respAtty=atts.filter(function(a){return a.forParty==="resp";})[0];
+    body += partyCard(pet, partyRole(pet)||"Petitioner") + attyCard(petAtty, partyRole(pet)||"Pet");
+    body += partyCard(resp, partyRole(resp)||"Respondent") + attyCard(respAtty, partyRole(resp)||"Resp");
+  } else if(_contactTab==="client"){
+    var cl=c.clients||[];
+    body += cl.length ? cl.map(function(x){ return partyCard(x, "Client"); }).join("") : '<div class="empty">No client on file.</div>';
+  } else {
+    var co=c.collaterals||[];
+    body += co.length ? co.map(function(x){ return partyCard(x, x.otherRole||"Collateral"); }).join("") : '<div class="empty">No collaterals on file.</div>';
+  }
+  $("contactsBody").innerHTML = tabs + body +
+    '<div class="foot">Tap to call or email. Contacts stay here — not saved to your iPhone Contacts.</div>';
+}
+function tabBtn(key,label,n){
+  return '<button class="tab'+(_contactTab===key?" on":"")+'" onclick="setTab(\''+key+'\')">'+label+' <span class="n">'+n+'</span></button>';
+}
+function setTab(k){ _contactTab=k; renderContacts(); }
+function partyCard(p, role){
+  if(!p) return "";
+  return '<div class="cc"><div class="top"><span class="name">'+esc(p.fullName)+'</span>'+
+    (role?'<span class="role">'+esc(role)+'</span>':'')+'</div>'+
+    '<div class="lines">'+contactLines(p)+'</div></div>';
+}
+function showList(){ show("list"); }
+
+/* ---------------- LOCK (Face ID / PIN) ---------------- */
+var _pin="", _pinMode="verify", _pinFirst="";
+function drawPinDots(){ var b=""; for(var i=0;i<4;i++) b+='<div class="pindot'+(i<_pin.length?" f":"")+'"></div>'; $("pinDots").innerHTML=b; }
+function drawKeys(){
+  var ks=["1","2","3","4","5","6","7","8","9","","0","del"];
+  $("keys").innerHTML = ks.map(function(k){
+    if(k==="") return '<button class="key blank"></button>';
+    if(k==="del") return '<button class="key" onclick="pinKey(\'del\')">&#9003;</button>';
+    return '<button class="key" onclick="pinKey(\''+k+'\')">'+k+'</button>';
+  }).join("");
+}
+function pinKey(k){
+  $("lockErr").textContent="";
+  if(k==="del"){ _pin=_pin.slice(0,-1); drawPinDots(); return; }
+  if(_pin.length>=4) return;
+  _pin+=k; drawPinDots();
+  if(_pin.length===4) setTimeout(pinComplete,120);
+}
+async function pinHash(p){ return b64url(await sha256("axis:"+p)); }
+async function pinComplete(){
+  if(_pinMode==="verify"){
+    var h=await pinHash(_pin);
+    if(h===localStorage.getItem(LS.pinHash)){ _pin=""; enterApp(); }
+    else { _pin=""; drawPinDots(); $("lockErr").textContent="Wrong PIN"; }
+  } else if(_pinMode==="setNew"){
+    _pinFirst=_pin; _pin=""; drawPinDots(); $("lockTitle").textContent="Confirm PIN"; _pinMode="confirm";
+  } else if(_pinMode==="confirm"){
+    if(_pin===_pinFirst){ localStorage.setItem(LS.pinHash, await pinHash(_pin)); localStorage.setItem(LS.lockKind,"pin"); _pin=""; enterApp(); }
+    else { _pin=""; _pinMode="setNew"; _pinFirst=""; drawPinDots(); $("lockTitle").textContent="Set a PIN"; $("lockErr").textContent="Didn't match, try again"; }
+  }
+}
+function showLock(){
+  var kind=localStorage.getItem(LS.lockKind);
+  _pin=""; _pinMode="verify"; drawPinDots(); drawKeys();
+  $("lockTitle").textContent="Enter PIN";
+  $("faceBtn").style.display = (kind==="face"||localStorage.getItem(LS.cred)) ? "block" : "none";
+  show("lock");
+  if(kind==="face") tryFaceUnlock();
+}
+async function tryFaceUnlock(){
+  var credId=localStorage.getItem(LS.cred); if(!credId){ $("lockErr").textContent="Face ID not set"; return; }
+  try{
+    var raw=Uint8Array.from(atob(credId.replace(/-/g,"+").replace(/_/g,"/")), function(ch){return ch.charCodeAt(0);});
+    await navigator.credentials.get({publicKey:{
+      challenge:crypto.getRandomValues(new Uint8Array(32)),
+      allowCredentials:[{type:"public-key", id:raw}],
+      userVerification:"required", timeout:60000
+    }});
+    enterApp();
+  }catch(e){ $("lockErr").textContent="Face ID failed — use PIN"; }
+}
+async function enableFaceID(){
+  try{
+    var cred=await navigator.credentials.create({publicKey:{
+      challenge:crypto.getRandomValues(new Uint8Array(32)),
+      rp:{name:"AXIS"}, user:{id:crypto.getRandomValues(new Uint8Array(16)), name:"axis", displayName:"AXIS"},
+      pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:"platform", userVerification:"required"},
+      timeout:60000
+    }});
+    var idBytes=new Uint8Array(cred.rawId);
+    localStorage.setItem(LS.cred, b64url(idBytes));
+    localStorage.setItem(LS.lockKind,"face");
+    enterApp();
+  }catch(e){ $("setupErr").textContent="Couldn't enable Face ID. Try a PIN instead."; }
+}
+
+/* ---------------- flow ---------------- */
+function enterApp(){
+  renderList("");
+  show("list");
+  refreshInBackground();
+}
+async function refreshInBackground(){
+  try{ CASES=await loadAllCases(); renderList($("searchInput").value||""); }catch(e){}
+}
+function needLock(){ return !!localStorage.getItem(LS.lockKind); }
+
+async function boot(){
+  // 1) handle OAuth redirect
+  var params=new URLSearchParams(window.location.search);
+  if(params.get("code")){
+    $("loadingMsg").textContent="Finishing sign-in…"; show("loading");
+    try{
+      _access=await exchangeCode(params.get("code"));
+      _accessExp=Date.now()+14400000;
+      history.replaceState({}, "", REDIRECT_URI);   // clean the URL
+    }catch(e){ $("authErr").textContent="Sign-in failed. Try again."; show("auth"); return; }
+  }
+  // 2) no refresh token → must sign in
+  if(!localStorage.getItem(LS.refresh) && !_access){ show("auth"); return; }
+  // 3) load cached cases for instant view
+  try{ CASES=JSON.parse(localStorage.getItem(LS.cases)||"[]"); }catch(e){ CASES=[]; }
+  // 4) first-ever load with no cache → fetch before showing
+  if(!CASES.length){
+    $("loadingMsg").textContent="Loading your cases…"; show("loading");
+    try{ CASES=await loadAllCases(); }catch(e){ $("authErr").textContent="Couldn't load cases. Pull the app again."; }
+  }
+  // 5) lock gate
+  if(needLock()){ showLock(); return; }
+  // 6) offer to set up a lock on first run
+  show("setupLock");
+}
+
+/* ---------------- wire up ---------------- */
+$("signinBtn").onclick=function(){ startSignIn(); };
+$("faceBtn").onclick=function(){ tryFaceUnlock(); };
+$("enableFaceBtn").onclick=function(){ enableFaceID(); };
+$("setPinBtn").onclick=function(){ _pinMode="setNew"; _pin=""; _pinFirst=""; drawPinDots(); drawKeys(); $("lockTitle").textContent="Set a PIN"; $("faceBtn").style.display="none"; show("lock"); };
+$("skipLockBtn").onclick=function(){ enterApp(); };
+$("contactsBack").onclick=function(){ if(_contactCase) openCase(CASES.indexOf(_contactCase)); else showList(); };
+$("searchInput").oninput=function(){ renderList(this.value); };
+
+boot();
+</script>
+</body>
+</html>
