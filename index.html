@@ -96,7 +96,7 @@
 
   /* Centered full-screen states: auth, lock, loading */
   .screen-center{min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 28px; gap:18px;}
-  .logo{width:64px; height:64px; border-radius:18px; background:#141B22; display:flex; align-items:center; justify-content:center;}
+  .logo{width:72px; height:72px; display:block;}
   .h1{font-size:20px; font-weight:600; color:var(--cream);}
   .muted{color:var(--slate); font-size:14px; line-height:1.5; max-width:320px;}
   .btn{background:linear-gradient(180deg,#3A4954,#2C3A44); border:1px solid var(--gold); color:var(--gold2);
@@ -125,7 +125,7 @@
 
 <!-- AUTH -->
 <div id="auth" class="screen-center hidden">
-  <div class="logo"><svg width="46" height="46" viewBox="0 0 100 100" fill="none" aria-hidden="true"><circle cx="45.5" cy="50" r="17" stroke="#E9CC82" stroke-width="9"/><rect x="67" y="28.5" width="9" height="43" fill="#E9CC82"/></svg></div>
+  <img class="logo" src="icon.png" alt="AXIS">
   <div class="h1">AXIS</div>
   <div class="muted">Read-only case view. Sign in with Dropbox once to load your cases on this phone.</div>
   <button class="btn" id="signinBtn">Sign in with Dropbox</button>
@@ -134,7 +134,7 @@
 
 <!-- LOCK -->
 <div id="lock" class="screen-center hidden">
-  <div class="logo"><svg width="46" height="46" viewBox="0 0 100 100" fill="none" aria-hidden="true"><circle cx="45.5" cy="50" r="17" stroke="#E9CC82" stroke-width="9"/><rect x="67" y="28.5" width="9" height="43" fill="#E9CC82"/></svg></div>
+  <img class="logo" src="icon.png" alt="AXIS">
   <div class="h1" id="lockTitle">Locked</div>
   <div class="pinbox" id="pinDots"></div>
   <div class="err" id="lockErr"></div>
@@ -144,7 +144,7 @@
 
 <!-- SETUP LOCK (first run) -->
 <div id="setupLock" class="screen-center hidden">
-  <div class="logo"><svg width="46" height="46" viewBox="0 0 100 100" fill="none" aria-hidden="true"><circle cx="45.5" cy="50" r="17" stroke="#E9CC82" stroke-width="9"/><rect x="67" y="28.5" width="9" height="43" fill="#E9CC82"/></svg></div>
+  <img class="logo" src="icon.png" alt="AXIS">
   <div class="h1">Protect this app</div>
   <div class="muted">Add a lock so case data only opens for you. You can use Face ID, with a 4-digit PIN as backup.</div>
   <button class="btn" id="enableFaceBtn">Enable Face ID</button>
