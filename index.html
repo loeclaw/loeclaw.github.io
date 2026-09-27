@@ -87,6 +87,11 @@
   .lk .val{color:var(--slate2); font-size:16.7px; display:flex; align-items:center; gap:8px;}
   .lk .val .ico{color:var(--gold); width:16px; text-align:center;}
   .lk .act{color:var(--gold); font-size:20.7px; padding:4px; margin:-4px;}
+  /* An address is two lines, not a phone number — let it wrap and top-align the pin. */
+  .lk.addr{align-items:flex-start;}
+  .lk.addr .val{align-items:flex-start; line-height:1.32;}
+  .lk.addr .val .ico{margin-top:2px; flex:0 0 16px;}
+  .lk.addr .val .txt{min-width:0; overflow-wrap:anywhere;}
   .atty{background:var(--card2); border-radius:10px; padding:11px 12px; margin:0 0 12px 14px;}
   .atty .aname{color:var(--cream); font-size:16.1px;}
   .atty .afirm{color:var(--slate); font-size:12.6px; margin-top:1px;}
@@ -368,6 +373,15 @@ function contactLines(obj, opts){
       '<a class="act" href="tel:'+esc(num)+'">&#128222;</a></div>'; }); }
   if(obj.email){ out+='<div class="lk"><span class="val"><span class="ico">&#9993;</span>'+esc(obj.email)+'</span>'+
       '<a class="act" href="mailto:'+esc(obj.email)+'">&#9993;</a></div>'; }
+  /* Address — stored as street + cityStateZip. Tapping opens Apple Maps. Most collaterals
+     have none, so the row only appears when there is something to show. */
+  var street=(obj.street||"").trim(), csz=(obj.cityStateZip||"").trim();
+  if(street||csz){
+    var full=[street,csz].filter(Boolean).join(", ");
+    out+='<div class="lk addr"><span class="val"><span class="ico">&#128205;</span>'+
+      '<span class="txt">'+esc(street)+((street&&csz)?'<br>':'')+esc(csz)+'</span></span>'+
+      '<a class="act" href="https://maps.apple.com/?q='+encodeURIComponent(full)+'">&#128205;</a></div>';
+  }
   return out;
 }
 function attyCard(a, roleLbl){
